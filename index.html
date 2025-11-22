@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kshitij Housing Society</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fa-solid fa-building-user"></i> KHS
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="home">Home</li>
+                <li data-target="maintenance">Maintenance</li>
+                <li data-target="expenses">Expenses</li>
+                <li data-target="notices">Notices</li>
+            </ul>
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button id="change-password-btn" class="btn-sm admin-only" style="display: none;">
+                    <i class="fa-solid fa-key"></i> Change Password
+                </button>
+                <button id="admin-btn" class="admin-btn"><i class="fa-solid fa-lock"></i> Admin</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Home Section -->
+            <section id="home" class="page-section active">
+                <div class="hero">
+                    <h1 class="animate-text">Welcome to Kshitij Housing Society Portal</h1>
+                    <p class="animate-text delay-1">For the Residents of Kshitij Housing Society, Mahatma Nagar, Nashik,
+                        Maharashtra, India</p>
+                    <div class="quick-actions animate-text delay-2">
+                        <button class="action-card" onclick="navigateTo('maintenance')">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                            <span>Maintenance</span>
+                        </button>
+                        <button class="action-card" onclick="navigateTo('expenses')">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <span>Expenses</span>
+                        </button>
+                        <button class="action-card" onclick="navigateTo('notices')">
+                            <i class="fa-solid fa-bullhorn"></i>
+                            <span>Notices</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Maintenance Section -->
+            <section id="maintenance" class="page-section">
+                <div class="section-header">
+                    <h2>Maintenance Records</h2>
+                    <div class="controls">
+                        <select id="maintenance-month-filter">
+                            <!-- Options populated by JS -->
+                        </select>
+                        <button class="btn-sm admin-only" id="export-maintenance-btn">
+                            <i class="fa-solid fa-download"></i> Export CSV
+                        </button>
+                    </div>
+                </div>
+                <div class="card-container">
+                    <div class="table-responsive">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr No.</th>
+                                    <th>Owner Name</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Mode</th>
+                                    <th>Payment Date</th>
+                                    <th class="admin-only">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="maintenance-list">
+                                <!-- Rows populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expenses Section -->
+            <section id="expenses" class="page-section">
+                <div class="section-header">
+                    <h2>Society Expenses</h2>
+                    <div class="controls">
+                        <select id="expense-month-filter">
+                            <!-- Options populated by JS -->
+                        </select>
+                        <button class="btn-sm admin-only" id="export-expenses-btn">
+                            <i class="fa-solid fa-download"></i> Export CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="expenses-overview">
+                    <div class="expense-card total">
+                        <h3>Total Expenditure</h3>
+                        <p id="total-expense-amount">₹0</p>
+                    </div>
+                    <div class="expense-chart-container">
+                        <!-- Simple CSS/JS Bar Chart -->
+                        <div id="expense-chart" class="simple-chart"></div>
+                    </div>
+                </div>
+
+                <div class="card-container">
+                    <h3 class="sub-header">Expense List <button class="btn-sm admin-only" id="add-expense-btn"><i
+                                class="fa-solid fa-plus"></i> Add</button></h3>
+                    <ul id="expense-list" class="list-group">
+                        <!-- Items populated by JS -->
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Notices Section -->
+            <section id="notices" class="page-section">
+                <div class="section-header">
+                    <h2>Notice Board</h2>
+                    <div class="controls">
+                        <button class="btn-sm admin-only" id="export-notices-btn">
+                            <i class="fa-solid fa-download"></i> Export CSV
+                        </button>
+                        <button class="btn-primary admin-only" id="add-notice-btn"><i class="fa-solid fa-plus"></i> Post
+                            Notice</button>
+                    </div>
+                </div>
+                <div id="notice-board" class="notice-grid">
+                    <!-- Notices populated by JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Admin Login Modal -->
+        <div id="admin-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Admin Access</h2>
+                <p>Enter PIN to unlock admin features.</p>
+                <input type="password" id="admin-pin" placeholder="Enter the Password -->" maxlength="6">
+                <button id="admin-login-submit" class="btn-primary">Unlock</button>
+                <p id="login-error" class="error-msg"></p>
+            </div>
+        </div>
+
+        <!-- Change Password Modal -->
+        <div id="change-password-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-change-password-modal">&times;</span>
+                <h2>Change Admin Password</h2>
+                <p>Enter your current password and new password.</p>
+                <input type="password" id="current-password" placeholder="Current Password" maxlength="6">
+                <input type="password" id="new-password" placeholder="New Password (6 digits)" maxlength="6">
+                <input type="password" id="confirm-password" placeholder="Confirm New Password" maxlength="6">
+                <button id="change-password-submit" class="btn-primary">Change Password</button>
+                <p id="change-password-error" class="error-msg"></p>
+            </div>
+        </div>
+
+        <!-- Generic Add/Edit Modal -->
+        <div id="form-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-form-modal">&times;</span>
+                <h2 id="form-title">Add Item</h2>
+                <form id="dynamic-form">
+                    <!-- Form fields injected by JS -->
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
